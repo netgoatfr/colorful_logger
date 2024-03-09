@@ -26,7 +26,7 @@ class Logger:
     def set_level(self,lvl):
         self._level = lvl.lower()[0]
         mapping = dict(d=0,i=1,w=2,e=3,f=4)
-        self._enabled = ["debug","info","warn","error","fatal"][mapping:]
+        self._enabled = ["debug","info","warn","error","fatal"][mapping[self._level]:]
     @property
     def _time(self):
         return datetime.datetime.now()
