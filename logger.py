@@ -37,9 +37,9 @@ class Logger:
         self._prefix = _prefix
         
     @property
-    def root(self):return self._prefix + self.root
+    def root(self):return self._prefix + self._root
     @root.setter
-    def root(self,name):self._root = self._prefix + self.root
+    def root(self,name):self._root = self._prefix + self._root
 
     def get_child(self,name:str):
         return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self._prefix + self.root + "/")
