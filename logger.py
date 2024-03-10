@@ -4,7 +4,6 @@ import traceback
 from colorama import Fore, Style, init as __init
 import sys
 __init()
-
 class BaseStream:
     def __init__(self,file=sys.stdout):
         self.file = file
