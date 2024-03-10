@@ -13,16 +13,41 @@ class ErrStream(BaseStream):
         super().__init__(sys.stderr)
 
 
-DEFAULT_FORMAT = "[{h} {m} {s}] [{root}] [{level}]: {content}"
+DEFAULT_FORMAT = "[{h}:{m}:{s}] [{root}] [{level}]: {content}"
 
 class Logger:
-    def __init__(self, name:str = "Logger",level:str = "debug",/,*, stream=BaseStream, format = DEFAULT_FORMAT, colored=True):
-        self.root = name
+    def __init__(self, name:str = "Logger",level:str = "debug",/,*, stream:BaseStream=BaseStream(), format:str = DEFAULT_FORMAT, colored:bool=True,_prefix:str=""):
+        '''
+        # Create a Logger element:
+        @name: the name of this logger instance
+        @level: the logging level, should be "debug", "info", "warn", "error" or "fatal"
+        ## Positionals Arguments:
+        @stream: the stream used to print the data, using it's file attribute
+        @format: the logging format, which is by default to "[{h}:{m}:{s}] [{root}] [{level}]: {content}"
+        - Availables format attributes (case-sensitive): [h]our, [m]inutes, [s]econds, m[i]liseconds, [d]ays, [M]onths, [y]ears, root, level, content
+        @colored: enable or not colorful output.
+
+        the @_prefix args should not be touched.
+        '''
+        self._root = name
         self._format = format
         self._colored = colored
         self._stream = stream
         self.set_level(level)
+        self._prefix = _prefix
         
+    @property
+    def root(self):return self._prefix + self.root
+    @root.setter
+    def root(self,name):self._root = self._prefix + self.root
+
+    def get_child(self,name:str):
+        return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self._prefix + self.root + "/")
+    def get_instance(self,name:str):
+        return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self._prefix + self.root + "#")
+    def get_sub(self,name:str):
+        return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self._prefix + self.root + ".")
+
     def set_level(self,lvl):
         self._level = lvl.lower()[0]
         mapping = dict(d=0,i=1,w=2,e=3,f=4)
@@ -107,11 +132,11 @@ class Logger:
     critical = fatal # To enable compat from other logging modules
         
     def report_exception(self,e:BaseException):
-        self.lock.acquire()
-        self._before_log(str(e))
         lines = traceback.format_exception(e)
         for line in lines:
-            if self.colored_output:print(Fore.RED+Style.BRIGHT+"["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line+Style.RESET_ALL,file=self.file)
-            else:print("["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line,file=self.file)
-        self._after_log(str(e)) 
-        self.lock.release()
+            if self._colored:print(Fore.RED+Style.BRIGHT+"["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line+Style.RESET_ALL,file=self.file)
+            else:print("["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line,file=self._stream.file)
+
+
+l = Logger()
+l.info("DDD")
