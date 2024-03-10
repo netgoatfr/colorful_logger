@@ -1,8 +1,10 @@
+
 import datetime
 import traceback
 from colorama import Fore, Style, init as __init
 import sys
 __init()
+
 class BaseStream:
     def __init__(self,file=sys.stdout):
         self.file = file
@@ -35,11 +37,9 @@ class Logger:
         self._prefix = _prefix
         
     @property
-    def root(self):
-        return self._prefix + self._root
+    def root(self):return self._prefix + self._root
     @root.setter
-    def root(self,name):
-        self._root = self._prefix + self._root
+    def root(self,name):self._root = self._prefix + self._root
 
     def get_child(self,name:str):
         return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self._prefix + self.root + "/")
@@ -99,36 +99,48 @@ class Logger:
         ▓▓▓▓▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▓▓▒▒▓▓▓▓        
           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓          
 """)
+        
+    def _formated(self,lvl,content):
+        return self._format.format(h=self._time.hour,
+                                   m=self._time.minute,
+                                   s=self._time.second,
+                                   d=self._time.day,
+                                   M=self._time.month,
+                                   y=self._time.year,
+                                   i=self._time.microsecond/1000,
+                                   root=self.root,
+                                   level=lvl,
+                                   content=content)
     
     def info(self,txt):
         time = self._time
-        if self._colored:print(Fore.LIGHTGREEN_EX+Style.BRIGHT+self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="INFO",content=txt)+Style.RESET_ALL,file=self._stream.file)
-        else:print(self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="INFO",content=txt),file=self._stream.file)
+        if self._colored:print(Fore.LIGHTGREEN_EX+Style.BRIGHT+self._formated("INFO",txt)+Style.RESET_ALL,file=self._stream.file)
+        else:print(self._formated("INFO",txt),file=self._stream.file)
 
     def debug(self,txt):
         if "debug" not in self._enabled:return
         time = self._time
-        if self._colored:print(Fore.LIGHTBLUE_EX+Style.BRIGHT+self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="DEBUG",content=txt)+Style.RESET_ALL,file=self._stream.file)
-        else:print(self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="DEBUG",content=txt),file=self._stream.file)
+        if self._colored:print(Fore.LIGHTBLUE_EX+Style.BRIGHT+self._formated("DEBUG",txt)+Style.RESET_ALL,file=self._stream.file)
+        else:print(self._formated("DEBUG",txt),file=self._stream.file)
 
     def warn(self,txt):
         if "warn" not in self._enabled:return
         time = self._time
-        if self._colored:print(Fore.YELLOW+Style.BRIGHT+self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="WARN",content=txt)+Style.RESET_ALL,file=self._stream.file)
-        else:print(self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="WARN",content=txt),file=self._stream.file)
+        if self._colored:print(Fore.YELLOW+Style.BRIGHT+self._formated("WARN",txt)+Style.RESET_ALL,file=self._stream.file)
+        else:print(self._formated("WARN",txt),file=self._stream.file)
 
 
     def error(self,txt):
         if "error" not in self._enabled:return
         time = self._time
-        if self._colored:print(Fore.LIGHTRED_EX+Style.BRIGHT+self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="ERROR",content=txt)+Style.RESET_ALL,file=self._stream.file)
-        else:print(self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="ERROR",content=txt),file=self._stream.file)
+        if self._colored:print(Fore.LIGHTRED_EX+Style.BRIGHT+self._formated("ERROR",txt)+Style.RESET_ALL,file=self._stream.file)
+        else:print(self._formated("ERROR",txt),file=self._stream.file)
 
     def fatal(self,txt):
         if "fatal" not in self._enabled:return
         time = self._time
-        if self._colored:print(Fore.RED+Style.BRIGHT+self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="FATAL",content=txt)+Style.RESET_ALL,file=self._stream.file)
-        else:print(self._format.format(h=time.hour,m=time.minute,s=time.second,root=self.root,level="FATAL",content=txt),file=self._stream.file)
+        if self._colored:print(Fore.RED+Style.BRIGHT+self._formated("FATAL",txt)+Style.RESET_ALL,file=self._stream.file)
+        else:print(self._formated("FATAL",txt),file=self._stream.file)
     critical = fatal # To enable compat from other logging modules
         
     def report_exception(self,e:BaseException):
