@@ -31,7 +31,7 @@ class Logger:
     def _time(self):
         return datetime.datetime.now()
 
-    def hamburger(self,*):
+    def hamburger(self,*a):
         print("""                                                                                                        
                                     ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                                    
                                 ▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓                                
