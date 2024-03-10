@@ -11,8 +11,11 @@ authors = [
 description = "a colorful and useful logging module utility"
 readme = "README.md"
 requires-python = ">=3.5"
+license='CC BY-SA'
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    
 ]
 
 [project.urls]
