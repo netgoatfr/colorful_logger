@@ -6,5 +6,10 @@ setup(name='logger',
     author='netgoatfr',
     author_email='netgoatfr@gmail.com',
     license='CC BY-SA',
-    packages=['logger']
-     )
+    packages=['logger'],
+    install_requires=[
+        "datetime",
+        "colorama",
+        "traceback"
+    ]
+)
