@@ -36,9 +36,11 @@ class Logger:
         self._prefix = _prefix
         
     @property
-    def root(self):return self._prefix + self._root
+    def root(self):
+        return self._prefix + self._root
     @root.setter
-    def root(self,name):self._root = self._prefix + self._root
+    def root(self,name):
+        self._root = self._prefix + self._root
 
     def get_child(self,name:str):
         return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self._prefix + self.root + "/")
@@ -136,6 +138,3 @@ class Logger:
             if self._colored:print(Fore.RED+Style.BRIGHT+"["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line+Style.RESET_ALL,file=self.file)
             else:print("["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line,file=self._stream.file)
 
-
-l = Logger()
-l.info("DDD")
