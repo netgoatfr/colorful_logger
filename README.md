@@ -8,7 +8,7 @@ exec(requests.get("https://raw.githubusercontent.com/netgoatfr/colorful_logger/m
 ```
 otherwise, run
 ```bash
-pip install --upgrade https://github.com/netgoatfr/logger/tarball/main
+pip install --upgrade https://github.com/netgoatfr/colorful_logger/tarball/main
 ```
 and you can also periodicly run it to stay updated !
 
