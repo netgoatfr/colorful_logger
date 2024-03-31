@@ -4,7 +4,7 @@ A logging utility module for python that can print out with colors, diffrent for
 To say updated, you can import the module by doing:
 ```py
 import requests
-exec(requests.get("https://raw.githubusercontent.com/netgoatfr/logger/main/logger/__init__.py").text,globals(),locals())
+exec(requests.get("https://raw.githubusercontent.com/netgoatfr/colorful_logger/main/src/colorful_logger/__init__.py").text,globals(),locals())
 ```
 otherwise, run
 ```bash
