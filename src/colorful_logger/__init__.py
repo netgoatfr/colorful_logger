@@ -30,6 +30,7 @@ class Logger:
         the @_prefix args should not be touched.
         '''
         self._root = name
+        self._childs:list[Logger] = []
         self._format = format
         self._colored = colored
         self._stream = stream
@@ -42,16 +43,24 @@ class Logger:
     def root(self,name):self._root = self._prefix + self._root
 
     def get_child(self,name:str):
-        return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self.root + "/")
+        d = Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self.root + "/")
+        self._childs.append(d)
+        return d
     def get_instance(self,name:str):
-        return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self.root + "#")
+        d = Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self.root + "#")
+        self._childs.append(d)
+        return d
     def get_sub(self,name:str):
-        return Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self.root + ".")
+        d = Logger(name,self._level,stream=self._stream,format=self._format,colored=self._colored,_prefix=self.root + ".")
+        self._childs.append(d)
+        return d
 
-    def set_level(self,lvl):
+    def set_level(self,lvl:str):
         self._level = lvl.lower()[0]
         mapping = dict(d=0,i=1,w=2,e=3,f=4)
         self._enabled = ["debug","info","warn","error","fatal"][mapping[self._level]:]
+        for i in self._childs:
+            i.set_level(lvl)
     @property
     def _time(self):
         return datetime.datetime.now()
@@ -102,15 +111,15 @@ class Logger:
         
     def _formated(self,lvl,content):
         return self._format.format(h=self._time.hour,
-                                   m=self._time.minute,
-                                   s=self._time.second,
-                                   d=self._time.day,
-                                   M=self._time.month,
-                                   y=self._time.year,
-                                   i=self._time.microsecond/1000,
-                                   root=self.root,
-                                   level=lvl,
-                                   content=content)
+                                    m=self._time.minute,
+                                    s=self._time.second,
+                                    d=self._time.day,
+                                    M=self._time.month,
+                                    y=self._time.year,
+                                    i=self._time.microsecond/1000,
+                                    root=self.root,
+                                    level=lvl,
+                                    content=content)
     
     def info(self,txt):
         time = self._time
@@ -146,5 +155,6 @@ class Logger:
     def report_exception(self,e:BaseException):
         lines = traceback.format_exception(e)
         for line in lines:
-            if self._colored:print(Fore.RED+Style.BRIGHT+"["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line+Style.RESET_ALL,file=self.file)
-            else:print("["+self._time+"]"+" ["+self.root+"] [EXCEPTION]: "+line,file=self._stream.file)
+            line = line.strip("\n ")
+            if self._colored:print(Fore.RED+Style.BRIGHT+self._formated("EXCEPTION",line)+Style.RESET_ALL,file=self._stream.file)
+            else:print(self._formated("EXCEPTION",line),file=self._stream.file)
