@@ -8,6 +8,7 @@ __init()
 
 DEFAULT_FORMAT = "[{h}:{m}:{s}] [{root}] [{level}]: {content}"
 
+
 class Logger:
     def __init__(self, name:str = "Logger",level:str = "debug",/,*, stream:typing.TextIO = sys.stdout, format:str = DEFAULT_FORMAT, colored:bool=True,_prefix:str=""):
         '''
