@@ -6,6 +6,7 @@ from colorama import Fore, Style, init as __init
 import sys
 __init()
 
+
 DEFAULT_FORMAT = "[{h}:{m}:{s}] [{root}] [{level}]: {content}"
 
 class Logger:
