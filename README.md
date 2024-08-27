@@ -1,12 +1,12 @@
 # logger
 A logging utility module for python that can print out with colors, diffrent formats, ect
 ### Import the module
-To say updated, you can import the module by doing:
+To say updated, you can import the module by doing (need an internet connection at each run):
 ```py
 import requests
 exec(requests.get("https://raw.githubusercontent.com/netgoatfr/colorful_logger/main/src/colorful_logger/__init__.py").text,globals(),locals())
 ```
-otherwise, run
+Or
 ```bash
 pip install --upgrade https://github.com/netgoatfr/colorful_logger/tarball/main
 ```
